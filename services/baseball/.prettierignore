@@ -1,0 +1,7 @@
+dist
+node_modules
+pnpm-lock.yaml
+drizzle/meta
+tests/fixtures
+CLAUDE.md
+openapi.yaml

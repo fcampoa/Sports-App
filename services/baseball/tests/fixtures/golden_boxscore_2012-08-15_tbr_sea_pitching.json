@@ -1,0 +1,105 @@
+{
+  "fixture_type": "golden",
+  "description": "Linea de pitcheo real y publica usada como golden file para RN-GEN-004 (27 outs -> \"9.0\") y RN-GEN-002 (K/BB con BB = 0 -> null). Juego perfecto de Felix Hernandez.",
+  "game": {
+    "date": "2012-08-15",
+    "league": "MLB",
+    "venue": "Safeco Field, Seattle",
+    "away_team": "TBR",
+    "home_team": "SEA",
+    "final_score": { "away": 0, "home": 1 },
+    "scheduled_innings": 9
+  },
+  "sources": [
+    {
+      "name": "Baseball-Reference box score",
+      "url": "https://www.baseball-reference.com/boxes/SEA/SEA201208150.shtml"
+    },
+    {
+      "name": "Wikipedia - Felix Hernandez's perfect game",
+      "url": "https://en.wikipedia.org/wiki/F%C3%A9lix_Hern%C3%A1ndez%27s_perfect_game"
+    }
+  ],
+  "verified_on": "2026-10-16",
+  "pitching_line": {
+    "player": "Felix Hernandez",
+    "team": "SEA",
+    "raw_counts": {
+      "outs_recorded": 27,
+      "H": 0,
+      "R": 0,
+      "ER": 0,
+      "BB": 0,
+      "IBB": 0,
+      "K": 12,
+      "HBP": 0,
+      "HR": 0,
+      "BF": 27,
+      "pitches": 113,
+      "strikes": 77,
+      "WP": 0,
+      "BK": 0,
+      "decision": "W"
+    }
+  },
+  "expected_derived": [
+    {
+      "rule_id": "RN-GEN-004",
+      "metric": "InningsPitched.display",
+      "expected": "9.0",
+      "note": "Juego completo de 9 entradas: 27 outs. OBR 9.22 Comment (tercios de entrada)."
+    },
+    {
+      "rule_id": "RN-GEN-004",
+      "metric": "InningsPitched.asInnings",
+      "expected": 9.0,
+      "tolerance": 1e-12,
+      "note": "27 / 3 exacto."
+    },
+    {
+      "rule_id": "RN-PIT-001",
+      "metric": "ERA",
+      "formula_integer_scaled": "27 * ER / outs_recorded = 27 * 0 / 27",
+      "expected_value": 0.0,
+      "expected_display": "0.00",
+      "note": "0 ER NO es denominador 0: el resultado es 0.00, no '—' (contrasta con RN-GEN-002)."
+    },
+    {
+      "rule_id": "RN-PIT-002",
+      "metric": "WHIP",
+      "formula_integer_scaled": "3 * (BB + H) / outs_recorded = 3 * 0 / 27",
+      "expected_value": 0.0,
+      "expected_display": "0.00"
+    },
+    {
+      "rule_id": "RN-PIT-003",
+      "metric": "K/9",
+      "formula_integer_scaled": "27 * K / outs_recorded = 27 * 12 / 27",
+      "expected_value": 12.0,
+      "expected_display": "12.00"
+    },
+    {
+      "rule_id": "RN-PIT-003",
+      "metric": "BB/9",
+      "formula_integer_scaled": "27 * BB / outs_recorded = 27 * 0 / 27",
+      "expected_value": 0.0,
+      "expected_display": "0.00"
+    },
+    {
+      "rule_id": "RN-GEN-002",
+      "metric": "K/BB",
+      "formula": "K / BB = 12 / 0",
+      "expected_value": null,
+      "expected_display": "—",
+      "note": "Caso real de denominador 0: con 0 BB la razon K/BB es null y se muestra '—', nunca 0 ni error (RN-PIT-003 + RN-GEN-002)."
+    },
+    {
+      "rule_id": "RN-JUE-002",
+      "metric": "Consistencia de outs",
+      "expected": "outs del pitcheo de SEA (27) == 3 x 9 entradas a la defensiva de SEA; ningun bateador de TBR se embaso -> BF == outs_recorded == 27.",
+      "note": "TBR (visitante) bateo las 9 entradas completas y consumio exactamente 27 outs. No aplica la excepcion de walk-off de RN-JUE-002."
+    }
+  ],
+  "scope_note": "TAREA-BB-001 solo implementa InningsPitched y Rate: de este golden file aplican los dos 'expected_derived' de RN-GEN-004, ERA (new Rate(27 * ER, outs).value === 0, no null), K/9 (new Rate(27 * K, outs).value === 12) y K/BB (new Rate(K, BB).value === null). WHIP, BB/9 y la consistencia de outs quedan reservados para las tareas de estadisticas de pitcheo; los expected_display los produce la capa de presentacion (RN-GEN-003), no Rate.",
+  "verification_note": "Contrastado el 2026-10-16 con Baseball-Reference (marcador 1-0, Safeco Field, W Hernandez 11-5, L Hellickson 7-8) y Wikipedia (12 K, 113 pitches, 77 strikes, 27 bateadores enfrentados y retirados, 0 H, 0 BB). HBP, WP y BK = 0 se deducen del juego perfecto (ningun corredor en base). Linea de TBR en Wikipedia: R-H-E 0-0-1."
+}

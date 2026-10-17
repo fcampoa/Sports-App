@@ -1,0 +1,257 @@
+{
+  "rule_id": "RN-GEN-004",
+  "rule_text": "Las entradas lanzadas se almacenan como outs enteros (outs_recorded). Se muestran como 'entero.resto' donde el resto es 0, 1 o 2 (20 outs -> \"6.2\"). Para formulas, IP = outs / 3.",
+  "source_of_truth": "docs/deportes/beisbol/reglas-negocio.md",
+  "value_object": "InningsPitched",
+  "official_rule_refs": [
+    "OBR 9.21(e) y su Comment: ERA = 9 x ER / IP 'including fractions of an inning' (ej. 3 ER en 9 1/3 IP = 2.89). Justifica asInnings() = outs / 3 sin redondear.",
+    "OBR 9.22 Comment: las fracciones de entrada se expresan en tercios (1 out = 1/3, 2 outs = 2/3).",
+    "OBR 9.02: el reporte del anotador oficial registra el numero de entradas que lanzo cada pitcher."
+  ],
+  "related_rules": [
+    "RN-GEN-003 (redondeo solo al presentar): asInnings() NO debe redondear; display() es exacto por aritmetica entera (division entera y resto), no requiere modo de redondeo.",
+    "RN-GEN-002: con outs = 0 toda tasa que divida por IP (ERA, WHIP, K/9) es null, no 0 ni error."
+  ],
+  "format": {
+    "id": "Identificador del caso, estable.",
+    "rule_id": "ID de regla que el nombre del test debe citar.",
+    "test_name": "Nombre estable del caso; el titulo del test debe contener el ID de regla (convencion de services/baseball/CLAUDE.md).",
+    "input": { "outs": "Entrada del constructor tal cual (el tipo JSON es el tipo esperado)." },
+    "expect": {
+      "display": "Valor exacto devuelto por display(), tipo string.",
+      "as_innings_exact_expr": "Expresion exacta que asInnings() debe representar (outs / 3).",
+      "as_innings_approx": "Valor de referencia para comparar con tolerancia.",
+      "tolerance": "Tolerancia absoluta recomendada para as_innings_approx (toBeCloseTo / diferencia absoluta).",
+      "error": "Nombre de la clase de error esperada: RangeError (valor fuera de rango) o TypeError (tipo incorrecto). Solo en error_cases."
+    },
+    "note": "Contexto beisbolero o motivo del caso limite."
+  },
+  "cases": [
+    {
+      "id": "RN-GEN-004-C01",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_zero_outs_as_0_0",
+      "input": { "outs": 0 },
+      "expect": { "display": "0.0", "as_innings_exact_expr": "0 / 3", "as_innings_approx": 0.0, "tolerance": 1e-12 },
+      "note": "Caso limite real: relevista que permite carreras y sale sin retirar a nadie. No es un error; su ERA si es null (RN-GEN-002)."
+    },
+    {
+      "id": "RN-GEN-004-C02",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_one_out_as_0_1",
+      "input": { "outs": 1 },
+      "expect": { "display": "0.1", "as_innings_exact_expr": "1 / 3", "as_innings_approx": 0.333333333333333, "tolerance": 1e-9 },
+      "note": "Un out = 1/3 de entrada (OBR 9.22 Comment). Cubre resto 1 con parte entera 0."
+    },
+    {
+      "id": "RN-GEN-004-C03",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_two_outs_as_0_2",
+      "input": { "outs": 2 },
+      "expect": { "display": "0.2", "as_innings_exact_expr": "2 / 3", "as_innings_approx": 0.666666666666667, "tolerance": 1e-9 },
+      "note": "Cubre resto 2 con parte entera 0."
+    },
+    {
+      "id": "RN-GEN-004-C04",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_three_outs_as_1_0",
+      "input": { "outs": 3 },
+      "expect": { "display": "1.0", "as_innings_exact_expr": "3 / 3", "as_innings_approx": 1.0, "tolerance": 1e-12 },
+      "note": "Frontera: el resto vuelve a 0 y la parte entera incrementa."
+    },
+    {
+      "id": "RN-GEN-004-C05",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_four_outs_as_1_1",
+      "input": { "outs": 4 },
+      "expect": { "display": "1.1", "as_innings_exact_expr": "4 / 3", "as_innings_approx": 1.333333333333333, "tolerance": 1e-9 },
+      "note": "Guarda contra implementaciones que formateen outs/3 como decimal (1.33) en vez de tercios."
+    },
+    {
+      "id": "RN-GEN-004-C06",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_five_outs_as_1_2",
+      "input": { "outs": 5 },
+      "expect": { "display": "1.2", "as_innings_exact_expr": "5 / 3", "as_innings_approx": 1.666666666666667, "tolerance": 1e-9 },
+      "note": "Completa las tres clases de resto con parte entera 1."
+    },
+    {
+      "id": "RN-GEN-004-C07",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_17_outs_as_5_2",
+      "input": { "outs": 17 },
+      "expect": { "display": "5.2", "as_innings_exact_expr": "17 / 3", "as_innings_approx": 5.666666666666667, "tolerance": 1e-9 },
+      "note": "Abridor que sale con dos outs en la sexta: 5.2 IP (no califica para la victoria por RN-PIT-005)."
+    },
+    {
+      "id": "RN-GEN-004-C08",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_20_outs_as_6_2",
+      "input": { "outs": 20 },
+      "expect": { "display": "6.2", "as_innings_exact_expr": "20 / 3", "as_innings_approx": 6.666666666666667, "tolerance": 1e-9 },
+      "note": "Caso canonico citado en RN-GEN-004 y en TAREA-BB-001."
+    },
+    {
+      "id": "RN-GEN-004-C09",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_26_outs_as_8_2",
+      "input": { "outs": 26 },
+      "expect": { "display": "8.2", "as_innings_exact_expr": "26 / 3", "as_innings_approx": 8.666666666666666, "tolerance": 1e-9 },
+      "note": "Juego completo perdido con dos outs en la novena."
+    },
+    {
+      "id": "RN-GEN-004-C10",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_27_outs_as_9_0",
+      "input": { "outs": 27 },
+      "expect": { "display": "9.0", "as_innings_exact_expr": "27 / 3", "as_innings_approx": 9.0, "tolerance": 1e-12 },
+      "note": "Juego completo de 9 entradas (ver golden_boxscore_2012-08-15_tbr_sea_pitching.json)."
+    },
+    {
+      "id": "RN-GEN-004-C11",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_28_outs_as_9_1",
+      "input": { "outs": 28 },
+      "expect": { "display": "9.1", "as_innings_exact_expr": "28 / 3", "as_innings_approx": 9.333333333333334, "tolerance": 1e-9 },
+      "note": "Entradas extra: no hay cota superior de outs por juego (RN-GEN-005 define solo las reglamentarias)."
+    },
+    {
+      "id": "RN-GEN-004-C12",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_31_outs_as_10_1",
+      "input": { "outs": 31 },
+      "expect": { "display": "10.1", "as_innings_exact_expr": "31 / 3", "as_innings_approx": 10.333333333333334, "tolerance": 1e-9 },
+      "note": "Parte entera de dos digitos: el formato no es de ancho fijo."
+    },
+    {
+      "id": "RN-GEN-004-C13",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_202_outs_as_67_1",
+      "input": { "outs": 202 },
+      "expect": { "display": "67.1", "as_innings_exact_expr": "202 / 3", "as_innings_approx": 67.33333333333333, "tolerance": 1e-9 },
+      "note": "Acumulado de temporada (RN-GEN-001: se suman outs crudos, no se promedian IP)."
+    },
+    {
+      "id": "RN-GEN-004-C14",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_614_outs_as_204_2",
+      "input": { "outs": 614 },
+      "expect": { "display": "204.2", "as_innings_exact_expr": "614 / 3", "as_innings_approx": 204.66666666666666, "tolerance": 1e-9 },
+      "note": "Temporada completa de un abridor; verifica que no hay desbordes ni formato cientifico."
+    },
+    {
+      "id": "RN-GEN-004-C15",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_1000_outs_as_333_1",
+      "input": { "outs": 1000 },
+      "expect": { "display": "333.1", "as_innings_exact_expr": "1000 / 3", "as_innings_approx": 333.3333333333333, "tolerance": 1e-9 },
+      "note": "Acumulado de carrera."
+    },
+    {
+      "id": "RN-GEN-004-C16",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_max_safe_integer_outs",
+      "input": { "outs": 9007199254740991 },
+      "expect": { "display": "3002399751580330.1", "as_innings_exact_expr": "9007199254740991 / 3", "as_innings_approx": 3002399751580330.5, "tolerance": 1 },
+      "note": "Frontera de E04: Number.MAX_SAFE_INTEGER (2^53 - 1) es valido. 9007199254740991 = 3 x 3002399751580330 + 1. display() debe salir de aritmetica entera (resto = outs % 3, entero = (outs - resto) / 3), sin notacion cientifica. asInnings() en double vale 3002399751580330.5 (el espaciado de number a esa magnitud es 0.5), de ahi la tolerancia 1; no es un valor beisbolero realista."
+    }
+  ],
+  "error_cases": [
+    {
+      "id": "RN-GEN-004-E01",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_rejects_negative_outs",
+      "input": { "outs": -1 },
+      "expect": { "error": "RangeError" },
+      "note": "Caso citado en TAREA-BB-001. No existen outs negativos."
+    },
+    {
+      "id": "RN-GEN-004-E02",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_rejects_negative_multiple_of_three",
+      "input": { "outs": -3 },
+      "expect": { "error": "RangeError" },
+      "note": "Guarda contra validar solo el resto (-3 % 3 === 0 en JavaScript) en lugar del signo."
+    },
+    {
+      "id": "RN-GEN-004-E03",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_rejects_fractional_outs",
+      "input": { "outs": 2.5 },
+      "expect": { "error": "RangeError" },
+      "note": "RN-GEN-004 exige outs ENTEROS: la granularidad minima es un out (1/3 de entrada). Es un valor invalido de tipo number, por eso RangeError (TypeError queda para tipos que no son number)."
+    },
+    {
+      "id": "RN-GEN-004-E04",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_rejects_unsafe_integer",
+      "input": { "outs": 9007199254740992 },
+      "expect": { "error": "RangeError" },
+      "note": "2^53 no es un entero seguro (Number.isSafeInteger): por encima de ese valor number pierde precision y outs % 3 deja de ser fiable. En JavaScript 6.0 === 6 es un entero valido, asi que el caso 'float integral' de otros lenguajes no existe aqui."
+    },
+    {
+      "id": "RN-GEN-004-E05",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_rejects_non_numeric_outs",
+      "input": { "outs": "20" },
+      "expect": { "error": "TypeError" },
+      "note": "Entrada string (p. ej. venida de un importador sin castear). TypeError porque no es number."
+    },
+    {
+      "id": "RN-GEN-004-E06",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_rejects_null_outs",
+      "input": { "outs": null },
+      "expect": { "error": "TypeError" },
+      "note": "null es el centinela de 'sin valor' (RN-GEN-002) y JSON lo produce al serializar NaN/Infinity: nunca debe convertirse en 0 outs. TypeError porque no es number."
+    },
+    {
+      "id": "RN-GEN-004-E07",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_rejects_boolean_outs",
+      "input": { "outs": true },
+      "expect": { "error": "TypeError" },
+      "note": "Guarda contra la coercion implicita de JavaScript (true -> 1). TypeError porque no es number."
+    }
+  ],
+  "cases_outside_json": {
+    "note": "JSON no puede representar estos valores (NaN, Infinity) o no los conserva de forma fiable (-0: JSON.stringify(-0) === \"0\"); NO forman parte de los grupos ejecutados con it.each. Deben cubrirse con tests escritos a mano que citen RN-GEN-004 (criterio de TAREA-BB-001), usando el literal exacto de input_expr. X05 debe escribir el literal -0 en el codigo del test y comparar con Object.is (toBe de Vitest usa Object.is).",
+    "cases": [
+      { "id": "RN-GEN-004-X01", "input_expr": "new InningsPitched(NaN)", "expect": { "error": "RangeError" } },
+      { "id": "RN-GEN-004-X02", "input_expr": "new InningsPitched(Infinity)", "expect": { "error": "RangeError" } },
+      { "id": "RN-GEN-004-X03", "input_expr": "new InningsPitched(-Infinity)", "expect": { "error": "RangeError" } },
+      { "id": "RN-GEN-004-X04", "input_expr": "new InningsPitched(Number.MAX_SAFE_INTEGER + 2)", "expect": { "error": "RangeError" }, "note": "Complementa E04 (2^53) con otro entero no seguro." },
+      { "id": "RN-GEN-004-X05", "rule_id": "RN-GEN-004", "input_expr": "new InningsPitched(-0)", "input_literal": { "outs": "-0" }, "expect": { "outs": 0, "display": "0.0", "assertion": "Object.is(new InningsPitched(-0).outs, 0) === true && new InningsPitched(-0).display() === \"0.0\"" }, "note": "Decidido por el usuario el 2026-10-16, mismo criterio que RN-GEN-007: -0 no se rechaza (Number.isSafeInteger(-0) es true y -0 < 0 es false) y se normaliza a 0. outs === 0 no detecta -0 (-0 === 0 es true); por eso Object.is." }
+    ]
+  },
+  "regression_guards": [
+    {
+      "id": "RN-GEN-004-G01",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_is_thirds_not_decimal",
+      "assertion": "new InningsPitched(20).display() === \"6.2\" && ![\"6.7\", \"6.67\", \"6.6667\"].includes(new InningsPitched(20).display())",
+      "note": "display() usa division entera y resto de outs entre 3, no formateo decimal de outs/3."
+    },
+    {
+      "id": "RN-GEN-004-G02",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_as_innings_is_not_rounded",
+      "assertion": "new InningsPitched(20).asInnings() !== 6.67 && new InningsPitched(20).asInnings() !== 6.6667 && Math.abs(new InningsPitched(20).asInnings() - 20 / 3) < 1e-12",
+      "note": "RN-GEN-003: el redondeo ocurre solo al presentar; asInnings() alimenta formulas (ERA, WHIP, K/9) sin redondear."
+    },
+    {
+      "id": "RN-GEN-004-G03",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_display_is_not_additive",
+      "assertion": "Number(new InningsPitched(20).display()) + Number(new InningsPitched(1).display()) !== new InningsPitched(21).asInnings()",
+      "note": "Documenta que display() NO es un numero: 6.2 + 0.1 'decimal' no es 7.0. Las IP se suman en outs (RN-GEN-001), nunca sobre la representacion."
+    },
+    {
+      "id": "RN-GEN-004-G04",
+      "rule_id": "RN-GEN-004",
+      "test_name": "test_rn_gen_004_remainder_is_always_0_1_or_2",
+      "assertion": "para todo outs en 0..399: new InningsPitched(outs).display().split('.')[1] esta en ['0', '1', '2']",
+      "note": "Propiedad invariante sobre todo el rango; opcional como test basado en propiedades."
+    }
+  ]
+}

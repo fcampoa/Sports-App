@@ -1,0 +1,83 @@
+openapi: 3.1.0
+paths:
+  /health:
+    get:
+      operationId: HealthController_health
+      parameters: []
+      responses:
+        "200":
+          description: The process is alive.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+      tags:
+        - operations
+  /ready:
+    get:
+      operationId: ReadyController_ready
+      parameters: []
+      responses:
+        "200":
+          description: The service and its database are ready.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReadyResponse"
+        "503":
+          description: The database is not reachable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ProblemDetails"
+      tags:
+        - operations
+info:
+  title: Baseball service
+  description: Estadisticas de beisbol (Sports-App).
+  version: 0.1.0
+  contact: {}
+tags: []
+servers: []
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - ok
+          example: ok
+      required:
+        - status
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          example: about:blank
+        title:
+          type: string
+          example: Not Found
+        status:
+          type: integer
+          example: 404
+        detail:
+          type: string
+          example: The requested resource was not found.
+      required:
+        - type
+        - title
+        - status
+        - detail
+    ReadyResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - ready
+          example: ready
+      required:
+        - status
