@@ -5,7 +5,7 @@ Aplicación de estadísticas deportivas. **Un servicio de backend por deporte**,
 
 ## ⚠️ El stack depende del deporte
 - **No hay stack de backend global.** Antes de escribir código de un servicio, lee `services/<deporte>/CLAUDE.md` y su ADR de stack (`docs/deportes/<deporte>/adr/XX-0001-stack-backend.md`).
-- Béisbol usa Python + FastAPI ([ADR-BB-0001](docs/deportes/beisbol/adr/BB-0001-stack-backend.md)). **Eso no implica que otros deportes usen Python.**
+- Béisbol usa NestJS + TypeScript ([ADR-BB-0003](docs/deportes/beisbol/adr/BB-0003-cambio-stack-backend.md), que reemplaza al ADR-BB-0001). **Eso no implica que otros deportes usen el mismo stack.**
 - Para agregar un deporte usa `/nuevo-deporte`: evalúa el stack con los criterios de [ADR-0002](docs/adr/0002-stack-por-deporte.md) y propone uno; el usuario lo aprueba.
 - Lo único común a todos los servicios es el **contrato de plataforma** (ADR-0002 §3): OpenAPI, RFC 9457, `/health`, Docker, BD propia, OpenTelemetry, dominio puro.
 
@@ -24,7 +24,7 @@ Aplicación de estadísticas deportivas. **Un servicio de backend por deporte**,
 ### Por deporte (`docs/deportes/<deporte>/`)
 | Deporte | Estado | Stack | Documentación |
 |---|---|---|---|
-| Béisbol (`BB`) | Etapa 1 | Python + FastAPI + PostgreSQL | [docs/deportes/beisbol/](docs/deportes/beisbol/README.md) |
+| Béisbol (`BB`) | Etapa 1 | NestJS (TypeScript) + PostgreSQL | [docs/deportes/beisbol/](docs/deportes/beisbol/README.md) |
 
 Cada carpeta de deporte contiene: `README.md`, `reglas-negocio.md`, `modelo-dominio.md`, `adr/` (`ADR-XX-NNNN`) y `tareas/` (`TAREA-XX-NNN`).
 

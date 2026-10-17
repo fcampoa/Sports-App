@@ -10,11 +10,10 @@ flowchart LR
   user[Usuario] --> cdn[CDN]
   cdn --> web[apps/web · Next.js]
   web --> gw[gateway / BFF]
-  gw --> bb[baseball · Python/FastAPI]
+  gw --> bb[baseball · NestJS]
   gw -. etapa 2 .-> fb[football · stack por decidir]
   bb --> bbdb[(BD baseball)]
   fb -.-> fbdb[(BD football)]
-  bbw[baseball worker] --> bbdb
 ```
 
 En la etapa 1 el gateway es opcional: `apps/web` puede llamar directamente al servicio de béisbol.
@@ -35,14 +34,14 @@ infrastructure/  Adaptadores: persistencia, HTTP, importadores de datos.
 
 Reglas de dependencia: `infrastructure → application → domain`. Nunca al revés.
 
-### Procesos: API y worker
-Si el deporte tiene análisis avanzado, el servicio se despliega como **dos procesos del mismo código**: `api` (consultas y registro) y `worker` (jobs por lotes). Ambos usan el mismo `domain`, así cada fórmula existe una sola vez.
+### Procesos: API y worker (diferido)
+Por ahora cada servicio es **un solo proceso** (la API). Si más adelante un deporte incorpora análisis avanzado, podrá desplegarse como **dos procesos del mismo código**: `api` (consultas y registro) y `worker` (jobs por lotes). Ambos usan el mismo `domain`, así cada fórmula existe una sola vez.
 
 ## Flujo de datos
 1. **Escritura**: se registran los eventos atómicos del deporte (béisbol: apariciones al plato — [ADR-BB-0002](deportes/beisbol/adr/BB-0002-jugada-como-fuente-de-verdad.md)).
 2. **Derivación**: el dominio calcula las líneas de estadística a partir de los eventos.
 3. **Lectura**: los agregados por temporada/carrera se sirven precalculados y se recalculan cuando cambia un partido.
-4. **Análisis**: el worker calcula métricas avanzadas y las escribe en tablas que la API solo lee.
+4. **Análisis (diferido)**: sabermetría y análisis avanzado quedan fuera de alcance por ahora; cuando se retomen, un worker las calculará y las escribirá en tablas que la API solo lee.
 
 ## API
 - REST + JSON, versionada por ruta: `/api/v1/<deporte>/...`.

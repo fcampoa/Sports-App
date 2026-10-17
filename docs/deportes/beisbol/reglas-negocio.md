@@ -14,6 +14,7 @@
 | RN-GEN-004 | Las entradas lanzadas se almacenan como **outs enteros** (`outs_recorded`). Se muestran como `entero.resto` donde el resto es 0, 1 o 2 (`20 outs → "6.2"`). Para fórmulas, `IP = outs / 3`. |
 | RN-GEN-005 ⚙️ | Entradas reglamentarias por juego: 9 por defecto (7 en ligas juveniles o dobles juegos). |
 | RN-GEN-006 ⚙️ | Bateador designado (DH) habilitado o no por liga/temporada. |
+| RN-GEN-007 | Las tasas solo admiten conteos **finitos y ≥ 0**, tanto en el numerador como en el denominador. `NaN`, `±Infinity` y los negativos son inválidos: es un error, no `null`. Esta validación ocurre **antes** del atajo de denominador 0 de RN-GEN-002 (`-1 / 0` es error, no `null`). `-0` no se rechaza: se normaliza a `0` (`-0 / 5 → 0`, nunca `-0`; `4 / -0 → null`). Las magnitudes con signo (diferencial de carreras, GB de RN-POS-002) no se modelan como tasa. |
 
 ## Bateo
 
@@ -69,4 +70,4 @@
 
 ## Pendientes de validar ❓
 - ¿Qué ligas concretas y qué reglas ⚙️ aplica cada una?
-- ¿Se requieren estadísticas avanzadas (wOBA, FIP, WAR)? Requieren constantes por temporada.
+- Estadísticas avanzadas (wOBA, FIP, WAR): **diferidas** (decisión 2026-10-16). No definir reglas `RN-*` para ellas hasta retomarlas.

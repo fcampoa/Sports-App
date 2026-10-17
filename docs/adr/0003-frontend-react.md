@@ -17,6 +17,6 @@ A diferencia del backend, el frontend es **un solo producto** para el usuario: n
 ## Consecuencias
 - **El frontend no calcula estadísticas**: muestra lo que entrega la API, para que las fórmulas existan en un solo lugar (el dominio de cada deporte).
 - Agregar un deporte = nuevo módulo en `apps/web/src/features/<deporte>/` + cliente generado; no un frontend nuevo.
-- Revalidación bajo demanda: cuando un partido pasa a `FINAL`, el worker del deporte llama a un endpoint protegido de Next.js que regenera solo las páginas afectadas (partido, jugadores, equipos, líderes).
+- Revalidación bajo demanda: cuando un partido pasa a `FINAL`, el servicio del deporte llama a un endpoint protegido de Next.js que regenera solo las páginas afectadas (partido, jugadores, equipos, líderes).
 - Next.js necesita un runtime de Node.js en producción (Vercel o un contenedor `output: "standalone"`), no solo archivos estáticos.
 - App móvil (D-3): primero PWA; después React Native (Expo) reutilizando tipos y lógica de datos.

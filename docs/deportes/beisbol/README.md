@@ -3,7 +3,7 @@
 - **Estado**: Etapa 1 — en diseño
 - **Servicio**: `services/baseball`
 - **Prefijo de ADRs**: `BB`
-- **Stack backend**: Python + FastAPI + PostgreSQL → [ADR-BB-0001](adr/BB-0001-stack-backend.md)
+- **Stack backend**: NestJS (TypeScript) + PostgreSQL → [ADR-BB-0003](adr/BB-0003-cambio-stack-backend.md) (reemplaza a [ADR-BB-0001](adr/BB-0001-stack-backend.md))
 
 ## Documentos
 | Documento | Contenido |

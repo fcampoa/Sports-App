@@ -1,9 +1,9 @@
 # ADR-BB-0001: Stack del servicio de béisbol — Python + FastAPI + PostgreSQL
 
-- **Estado**: Aceptado
+- **Estado**: Reemplazado por [ADR-BB-0003](BB-0003-cambio-stack-backend.md) (2026-10-16)
 - **Fecha**: 2026-10-15
 - **Decisores**: usuario
-- **Ámbito**: **solo** `services/baseball`. No es el stack por defecto de otros deportes (ver [ADR-0002](../../../adr/0002-stack-por-deporte.md)).
+- **Ámbito**: **solo** `services/baseball`. No era el stack por defecto de otros deportes (ver [ADR-0002](../../../adr/0002-stack-por-deporte.md)).
 
 ## Contexto
 Béisbol tiene un dominio de conteo con reglas estrictas y, sobre todo, una cultura sabermétrica muy fuerte (wOBA, FIP, WAR, run expectancy, proyecciones). El análisis avanzado es parte central del producto.

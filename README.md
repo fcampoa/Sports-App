@@ -10,9 +10,8 @@ Monorepo sin submódulos ([ADR-0004](docs/adr/0004-monorepo.md)).
 apps/
   web/                    Frontend Next.js (todos los deportes)
 services/
-  baseball/               Béisbol — Python + FastAPI + PostgreSQL
+  baseball/               Béisbol — NestJS (TypeScript) + PostgreSQL
 packages/
-  py/                     Utilidades técnicas compartidas en Python (cuando hagan falta)
   ts/                     Utilidades técnicas compartidas en TypeScript (cuando hagan falta)
 docs/
   adr/                    Decisiones de plataforma
@@ -25,13 +24,12 @@ CLAUDE.md                 Guía para Claude (léela también si eres humano)
 
 | Componente | Estado | Stack | Guía |
 |---|---|---|---|
-| `services/baseball` | Por crear (TAREA-BB-001) | Python 3.13 · FastAPI · PostgreSQL | [CLAUDE.md](services/baseball/CLAUDE.md) |
+| `services/baseball` | Por crear (TAREA-BB-001) | NestJS · TypeScript · PostgreSQL | [CLAUDE.md](services/baseball/CLAUDE.md) |
 | `apps/web` | Por crear | Next.js · React · TypeScript | [CLAUDE.md](apps/web/CLAUDE.md) |
 
 ## Requisitos de desarrollo
 - Git
 - Docker Desktop
-- [uv](https://docs.astral.sh/uv/) (instala Python): `uv python install 3.13`
 - Node.js LTS + pnpm (para `apps/web`)
 
 Cada servicio o app documenta sus comandos en su propio `CLAUDE.md`.

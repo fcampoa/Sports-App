@@ -19,7 +19,7 @@ apps/web/
         equipos/[teamId]/page.tsx
         juegos/[gameId]/page.tsx
         lideres/page.tsx
-      api/revalidate/route.ts   Revalidación bajo demanda (llamada por los workers)
+      api/revalidate/route.ts   Revalidación bajo demanda (la llama la API del deporte)
     features/
       baseball/             Componentes, hooks y consultas de béisbol
       <deporte>/            Un módulo por deporte; no se importan entre sí
@@ -43,7 +43,7 @@ pnpm build
 
 ## Renderizado y datos
 - **Server Components por defecto**: las páginas de jugador, equipo, juego y líderes se renderizan en el servidor para SEO.
-- **ISR**: `fetch` con `next: { tags: [...] }` (ej. `player:123`, `game:456`, `leaders:2026`). El worker llama a `POST /api/revalidate` con los tags afectados cuando un partido pasa a `FINAL`. El endpoint exige un secreto en el header.
+- **ISR**: `fetch` con `next: { tags: [...] }` (ej. `player:123`, `game:456`, `leaders:2026`). La API del deporte llama a `POST /api/revalidate` con los tags afectados cuando un partido pasa a `FINAL`. El endpoint exige un secreto en el header.
 - **Client Components** (`"use client"`) solo para interactividad: ordenar o filtrar tablas, gráficas y selectores. Ahí se usa TanStack Query.
 - `generateMetadata` en cada página de jugador, equipo y juego (título, descripción, Open Graph).
 

@@ -22,6 +22,7 @@ Consultar y analizar estadísticas deportivas de forma confiable, empezando por 
 
 ### Fuera (por ahora)
 - Otros deportes.
+- **Sabermetría y análisis de datos avanzado** (wOBA, FIP, WAR, run expectancy, proyecciones, ML): diferidos. La etapa 1 solo ofrece estadísticas oficiales (RN-BAT, RN-PIT, RN-FLD, RN-POS).
 - Datos en vivo / streaming.
 - Estadísticas avanzadas basadas en tracking (exit velocity, spin rate…).
 - Apuestas, fantasy, pagos.
